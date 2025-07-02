@@ -50,11 +50,9 @@ Edit the `config.json` file with your actual credentials:
 ```json
 {
   "email": {
-    "imap_server": "imap.gmail.com",
-    "imap_port": 993,
-    "email": "your-email@gmail.com",
-    "password": "your-app-password",
-    "folder": "INBOX"
+    "use_gmail_api": true,
+    "credentials_file": "credentials.json",
+    "token_file": "token.json"
   },
   "ai": {
     "api_key": "your-openai-api-key",
@@ -99,6 +97,70 @@ Edit the `config.json` file with your actual credentials:
    - Email Subject (Single line text)
    - Email Sender (Single line text)
    - Processed Date (Date)
+
+## 🔑 Gmail API Setup (OAuth)
+
+To use the Gmail API (recommended for security and reliability):
+
+1. Go to the [Google Cloud Console](https://console.cloud.google.com/)
+2. Create a new project (or select an existing one)
+3. Enable the Gmail API for your project
+4. Go to "APIs & Services > Credentials"
+5. Click "Create Credentials" > "OAuth client ID"
+6. Choose "Desktop app" and download the `credentials.json` file
+7. Place `credentials.json` in your project root
+8. The first time you run the script, a browser window will open for you to log in and authorize access. This will create a `token.json` file for future use.
+
+**Config Example for Gmail API:**
+```json
+{
+  "email": {
+    "use_gmail_api": true,
+    "credentials_file": "credentials.json",
+    "token_file": "token.json"
+  },
+  ...
+}
+```
+
+If you want to use IMAP instead, set `use_gmail_api` to `false` and provide IMAP credentials as before.
+
+## 🤖 Gemini API (Vertex AI) Setup
+
+To use Google Gemini (Vertex AI Generative Language API):
+
+1. Go to the [Google Cloud Console](https://console.cloud.google.com/)
+2. Create a new project (or select an existing one)
+3. Enable the Vertex AI API for your project
+4. Set up billing if required
+5. Create a service account with the Vertex AI User role
+6. Download the service account JSON key and place it in your project root (e.g., `service_account.json`)
+7. Set the environment variable for authentication:
+   ```bash
+   export GOOGLE_APPLICATION_CREDENTIALS="/path/to/service_account.json"
+   ```
+8. (Optional) Install the SDK:
+   ```bash
+   pip install google-cloud-aiplatform
+   ```
+
+**Config Example for Gemini API:**
+```json
+{
+  "ai": {
+    "provider": "gemini",
+    "project_id": "your-gcp-project-id",
+    "location": "us-central1",
+    "model": "gemini-1.0-pro",
+    "max_tokens": 1000
+  },
+  ...
+}
+```
+
+- `project_id`: Your Google Cloud project ID
+- `location`: Region for Vertex AI (e.g., `us-central1`)
+- `model`: Gemini model name (e.g., `gemini-1.0-pro`)
 
 ## 🏃‍♂️ Usage
 
